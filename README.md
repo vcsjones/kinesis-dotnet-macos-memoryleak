@@ -14,13 +14,13 @@ Note that this memory leak occurs even with invalid AWS credentials and stream n
 - .NET Core 3.1.2
 
 ### Steps to reproduce:
-1. Enable [MallocStackLogging](1) by setting the `MallocStackLogging` environment variable to `1`. I achieved this by editing `~/.bash_profile` to add the line `MallocStackLogging=1` and restarting the terminal.
+1. Enable [MallocStackLogging][1] by setting the `MallocStackLogging` environment variable to `1`. I achieved this by editing `~/.bash_profile` to add the line `MallocStackLogging=1` and restarting the terminal.
 1. Run the given program using `dotnet run Program.cs`.
 2. Find the process PID using the command `ps -x | grep dotnet`. The process should look something like: 
 ```
 28752 ttys002    0:00.67 dotnet exec ~/Downloads/kinesis-dotnet-macos-memoryleak/bin/Debug/netcoreapp3.1 kinesis_dotnet_macos_memoryleak.dll
 ```
-3. After a few minutes, run the command `sudo leaks -hex <process-PID> | tee <path-to-output-file>`. This should pipe the result of the [leaks](2) tool to the output file. Examnining the output file should yield a result of the format:
+3. After a few minutes, run the command `sudo leaks -hex <process-PID> | tee <path-to-output-file>`. This should pipe the result of the [leaks][2] tool to the output file. Examnining the output file should yield a result of the format:
 
 ```
 Process:         dotnet [28752]
