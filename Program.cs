@@ -12,12 +12,12 @@ namespace kinesis_dotnet_macos_memoryleak
     class Program
     {
         private static bool keepRunning = true;
-        private static string AccessKey = "insert-access-key-ID-here";
-        private static string Secret = "insert-secret-access-key-here";
+        private static string AccessKey = "[DELETED]";
+        private static string Secret = "[DELETED]";
 
         private static Random rgen = new Random();
 
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             Console.WriteLine("Started program!");
 
@@ -30,11 +30,9 @@ namespace kinesis_dotnet_macos_memoryleak
             };
 
             while (Program.keepRunning) {
-                // Every 5 seconds, try sending a test record to the Kinesis client.
                 Console.WriteLine("Sending test record...");
-                SendRecord(kinesisClient);
+                await SendRecord(kinesisClient);
                 Console.WriteLine("Sent!");
-                Thread.Sleep(5000);
             }
 
             Console.WriteLine("Exited gracefully.");
@@ -44,12 +42,14 @@ namespace kinesis_dotnet_macos_memoryleak
         {
             byte[] data = Encoding.UTF8.GetBytes(DateTime.Now.ToString());
             using MemoryStream stream = new MemoryStream(data);
-            await kinesisClient.PutRecordAsync(new PutRecordRequest() 
+
+            var response = await kinesisClient.PutRecordAsync(new PutRecordRequest() 
                 {
-                    StreamName = "insert-kinesis-data-stream-name-here",
+                    StreamName = "vcsjones-test-stream",
                     PartitionKey = "" + rgen.NextDouble() * 100000,
                     Data = stream
                 });
+            Console.WriteLine(response.HttpStatusCode);
         }
     }
 }
